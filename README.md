@@ -78,3 +78,9 @@ Appended(8): 11
 Appended(9): 70
 Appended(10): 25
 ```
+
+## References
+
+[Atomic Ordering](https://gcc.gnu.org/wiki/Atomic/GCCMM/AtomicSync)
+
+[C POSIX IPC example](https://gist.github.com/garcia556/8231e844a90457c99cc72e5add8388e4)
