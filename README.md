@@ -11,7 +11,7 @@ Zig code example to use shared memory among processes, only works on POSIX.
     ```zig
     pub inline fn lock(self: *Self, comptime value: bool) void {
         while (true) {
-            _ = @cmpxchgStrong(bool, &self.ptr.busy, !value, value, .SeqCst, .SeqCst) orelse break;
+            _ = @cmpxchgStrong(bool, &self.ptr.busy, !value, value, .seq_cst, .seq_cst) orelse break;
         }
     }
     ```

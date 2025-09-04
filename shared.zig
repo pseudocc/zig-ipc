@@ -1,6 +1,6 @@
 const std = @import("std");
 const builtin = @import("builtin");
-const os = std.os;
+const os = std.posix;
 
 pub const Shared = struct {
     const Self = @This();
@@ -31,12 +31,14 @@ pub const Shared = struct {
             .create = create,
         };
 
-        var oflags: c_int = os.O.RDWR;
+        var oflags: os.O = .{ .ACCMODE = .RDWR };
         if (create) {
-            oflags |= os.O.CREAT | os.O.EXCL;
+            oflags.CREAT = true;
+            oflags.EXCL = true;
         }
 
-        const rc = shm.open(name, oflags, os.S.IWUSR | os.S.IRUSR);
+        const mode: os.mode_t = os.S.IWUSR | os.S.IRUSR;
+        const rc = shm.open(name, @bitCast(oflags), mode);
         if (rc < 0) {
             return switch (os.errno(rc)) {
                 .ACCES => error.AccessDenied,
@@ -52,7 +54,9 @@ pub const Shared = struct {
             _ = std.c.ftruncate(rc, @sizeOf(Value));
         }
 
-        const raw_data = try os.mmap(null, @sizeOf(Value), os.PROT.READ | os.PROT.WRITE, os.MAP.SHARED, rc, 0);
+        const prot: u32 = os.PROT.READ | os.PROT.WRITE;
+        const map_flags: os.MAP = .{ .TYPE = .SHARED };
+        const raw_data = try os.mmap(null, @sizeOf(Value), prot, map_flags, rc, 0);
         self.ptr = @ptrCast(raw_data);
 
         if (create) {
@@ -73,7 +77,7 @@ pub const Shared = struct {
 
     pub inline fn lock(self: *Self, comptime value: bool) void {
         while (true) {
-            _ = @cmpxchgStrong(bool, &self.ptr.busy, !value, value, .SeqCst, .SeqCst) orelse break;
+            _ = @cmpxchgStrong(bool, &self.ptr.busy, !value, value, .seq_cst, .seq_cst) orelse break;
         }
     }
 
