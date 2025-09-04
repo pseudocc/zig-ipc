@@ -1,0 +1,27 @@
+{
+  "nodes": {
+    "nixpkgs": {
+      "locked": {
+        "lastModified": 1756883653,
+        "narHash": "sha256-dQz0HlhHXyXci1FrjZiG7Rwqmzom8NB6YkY8dqbTOXg=",
+        "owner": "pseudocc",
+        "repo": "nixpkgs",
+        "rev": "5b38695cbee1e20d523cd0c10623643dbc61c758",
+        "type": "github"
+      },
+      "original": {
+        "owner": "pseudocc",
+        "ref": "zig-0.15.1",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "root": {
+      "inputs": {
+        "nixpkgs": "nixpkgs"
+      }
+    }
+  },
+  "root": "root",
+  "version": 7
+}
