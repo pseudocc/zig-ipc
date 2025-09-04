@@ -15,10 +15,10 @@ pub fn main() !void {
     // CTRL+C to exit
     _ = c.signal(c.SIGINT, &handleAbort);
 
-    var so = Shared.init("ipc", true) catch |e| this: {
+    var so = Shared(.server).init("ipc") catch |e| this: {
         if (e == error.ShareExists) {
             _ = std.c.shm_unlink("ipc");
-            break :this try Shared.init("ipc", true);
+            break :this try Shared(.server).init("ipc");
         }
         return e;
     };

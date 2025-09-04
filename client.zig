@@ -10,7 +10,7 @@ const N_APPEND = 10;
 const MAX = 100;
 
 pub fn main() !void {
-    var so = try Shared.init("ipc", false);
+    var so = try Shared(.client).init("ipc");
     defer so.deinit();
 
     var rng = std.Random.DefaultPrng.init(@intCast(std.time.timestamp()));
